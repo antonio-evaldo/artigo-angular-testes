@@ -12,12 +12,11 @@ import { TodoService } from './todo.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  title = 'Todo List';
+  titulo = 'Todo List';
   novoItem = '';
-
   itens: string[] = [];
 
-  constructor (private todoService: TodoService) {}
+  constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
     this.itens = this.todoService.obterItens();

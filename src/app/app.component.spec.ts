@@ -1,29 +1,53 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { TodoService } from './todo.service';
+
+const mockListaTodo = ['Estudar Testes', 'Estudar Angular'];
+
+class MockTodoService {
+  private itens: string[] = mockListaTodo;
+
+  obterItens(): string[] {
+    return this.itens;
+  }
+
+  adicionarItem(item: string): void {
+    this.itens.push(item);
+  }
+}
 
 describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent],
-    }).compileComponents();
+  let componente: AppComponent;
+  let servico: TodoService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        AppComponent,
+        { provide: TodoService, useClass: MockTodoService },
+      ],
+    });
+
+    componente = TestBed.inject(AppComponent);
+    servico = TestBed.inject(TodoService);
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+  it('deveria ser criado com lista vazia (antes de buscar do serviço)', () => {
+    expect(componente.itens).toEqual([]);
   });
 
-  it(`should have the 'todo-app' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('todo-app');
+  it('deveria obter lista do TodoService', () => {
+    componente.ngOnInit();
+    expect(componente.itens).toEqual(mockListaTodo);
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, todo-app');
+  it('deveria adicionar item', () => {
+    componente.ngOnInit();
+
+    const novoItem = 'Assinar Alura';
+    componente.novoItem = novoItem;
+    componente.adicionarItem();
+
+    expect(componente.itens).toContain(novoItem);
   });
 });

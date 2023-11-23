@@ -4,10 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class TodoService {
-  itens: string[] = [
-    'Estudar Angular',
-    'Estudar Testes'
-  ];
+  private itens: string[] = [];
 
   obterItens(): string[] {
     return this.itens;
